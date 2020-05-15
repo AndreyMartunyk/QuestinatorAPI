@@ -13,12 +13,24 @@ namespace Questinator2
 {
     public class Startup
     {
-        // This method gets called by the runtime. Use this method to add services to the container.
-        // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
+        readonly string VueCorsPolicy = "_vueCorsPolicy";
         public void ConfigureServices(IServiceCollection services)
         {
             string connectionString = "Server=(local);Initial Catalog=Questionator;Integrated Security=True";
             services.AddTransient<IUserRepository, UserRepository>(provider => new UserRepository(connectionString));
+            services.AddCors(options =>
+            {
+                options.AddPolicy(name: VueCorsPolicy,
+                                  builder =>
+                                  {
+                                      builder.AllowAnyOrigin()//.WithOrigins("http://localhost:8080")
+                                        .AllowAnyHeader()
+                                        .AllowAnyMethod();
+                                        //.AllowCredentials(); 
+                                      
+
+                                  });
+            });
             //сюда будем добавлять остальные сущности из бд
             services.AddControllers();
         }
@@ -32,6 +44,8 @@ namespace Questinator2
             }
 
             app.UseRouting();
+
+            app.UseCors(VueCorsPolicy);
 
             app.UseEndpoints(endpoints =>
             {
