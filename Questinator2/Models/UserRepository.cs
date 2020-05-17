@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Questinator2.Models
 {
@@ -56,7 +55,7 @@ namespace Questinator2.Models
         {
             using (IDbConnection db = new SqlConnection(connectionString))
             {
-                var sqlQuery = "UPDATE [Users] SET Name = @Name, Age = @Age WHERE Id = @Id";
+                var sqlQuery = "UPDATE [Users] SET Name = @Name, Age = @Age WHERE UsersId = @UserId";
                 db.Execute(sqlQuery, user);
             }
         }
@@ -65,7 +64,7 @@ namespace Questinator2.Models
         {
             using (IDbConnection db = new SqlConnection(connectionString))
             {
-                var sqlQuery = "DELETE FROM [Users] WHERE Id = @id";
+                var sqlQuery = "DELETE FROM [Users] WHERE UserId = @id";
                 db.Execute(sqlQuery, new { id });
             }
         }
