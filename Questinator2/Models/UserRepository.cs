@@ -30,7 +30,7 @@ namespace Questinator2.Models
         {
             using (IDbConnection db = new SqlConnection(connectionString))
             {
-                return db.Query<User>("SELECT * FROM [User]").ToList();
+                return db.Query<User>("SELECT * FROM [Users]").ToList();
             }
         }
 
@@ -39,7 +39,7 @@ namespace Questinator2.Models
         {
             using (IDbConnection db = new SqlConnection(connectionString))
             {
-                return db.Query<User>("SELECT * FROM [User] WHERE [UserId] = @id", new { id }).FirstOrDefault();
+                return db.Query<User>("SELECT * FROM [Users] WHERE [UserId] = @id", new { id }).FirstOrDefault();
             }
         }
 
@@ -47,7 +47,7 @@ namespace Questinator2.Models
         {
             using (IDbConnection db = new SqlConnection(connectionString))
             {
-                var sqlQuery = "INSERT INTO [User] (NickName, Email, Photo) VALUES(@NickName, @Email, @Photo)";
+                var sqlQuery = "INSERT INTO [Users] (NickName, Email, Photo) VALUES(@NickName, @Email, @Photo)";
                 db.Execute(sqlQuery, user);
             }
         }
@@ -56,7 +56,7 @@ namespace Questinator2.Models
         {
             using (IDbConnection db = new SqlConnection(connectionString))
             {
-                var sqlQuery = "UPDATE [User] SET Name = @Name, Age = @Age WHERE Id = @Id";
+                var sqlQuery = "UPDATE [Users] SET Name = @Name, Age = @Age WHERE Id = @Id";
                 db.Execute(sqlQuery, user);
             }
         }
@@ -65,7 +65,7 @@ namespace Questinator2.Models
         {
             using (IDbConnection db = new SqlConnection(connectionString))
             {
-                var sqlQuery = "DELETE FROM [User] WHERE Id = @id";
+                var sqlQuery = "DELETE FROM [Users] WHERE Id = @id";
                 db.Execute(sqlQuery, new { id });
             }
         }
