@@ -32,7 +32,7 @@ namespace Questinator2.Models
                 
                 foreach (var question in questions)
                 {
-                    question.Answers = db.Query<Answer>("SELECT AnswerId, AnswerMsg, UserOwnerId  FROM [Answers] WHERE QuestionId = @QuestionId", new { question.QuestionId }).ToList();
+                    question.Answers = db.Query<Answer>("SELECT AnswerId, AnswerMsg, UserOwnerId  FROM [Answers] WHERE QuestionId = @QuestionId", new { question.QuestionId }).ToArray();
                 }
                 return questions;
             }
@@ -49,14 +49,21 @@ namespace Questinator2.Models
 
         public void Create(Question question)
         {
+            
             using (IDbConnection db = new SqlConnection(connectionString))
             {
                 var sqlQuery = "INSERT INTO [Questions] (UserOwnerId, QuestionMessage, CreateDate, MaxCustomQuestions, MaxAnswers, IsSaved, IsActive, AnswerDeadline )" +
-                    " VALUES(@UserOwnerId, @QuestionMessage, @CreateDate, @MaxCustomQuestions, @MaxAnswers, @IsSaved, @IsActive, @AnswerDeadline)";
-                db.Execute(sqlQuery, question);
+                    " VALUES(@UserOwnerId, @QuestionMessage, @CreateDate, @MaxCustomQuestions, @MaxAnswers, @IsSaved, @IsActive, @AnswerDeadline);" +
+                    " SELECT CAST(SCOPE_IDENTITY() as int)";
+                int? questionId = db.Query<int>(sqlQuery, question).FirstOrDefault();
+                question.QuestionId = questionId.Value;
+
+                //db.Execute(sqlQuery, question);
 
                 foreach (var answer in question.Answers)
                 {
+                    answer.QuestionId = question.QuestionId;
+                    answer.UserOwnerId = question.UserOwnerId;
                     //добавление ответов на этот вопрос
                     sqlQuery = "INSERT INTO [Answers] (AnswerMsg, QuestionId, UserOwnerId)" +
                     " VALUES(@AnswerMsg, @QuestionId, @UserOwnerId)";
@@ -64,6 +71,12 @@ namespace Questinator2.Models
                 }
                 
             }
+        }
+        private string sqlizeDate(string str)
+        {
+            str = str.Replace('T', ' ');
+            str = str + ":00";
+            return str;
         }
 
         public void Update(Question question)

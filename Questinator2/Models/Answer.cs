@@ -9,6 +9,7 @@ namespace Questinator2.Models
     {
         public int AnswerId { get; set; }
         public string AnswerMsg { get; set; }
-        public int UserOwnwerId { get; set; }
+        public int UserOwnerId { get; set; }
+        public int QuestionId { get; set; }
     }
 }
