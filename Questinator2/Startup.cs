@@ -18,6 +18,7 @@ namespace Questinator2
         {
             string connectionString = "Server=(local);Initial Catalog=Questionator;Integrated Security=True";
             services.AddTransient<IUserRepository, UserRepository>(provider => new UserRepository(connectionString));
+            services.AddTransient<IAnswerRepository, AnswerRepository>(provider => new AnswerRepository(connectionString));
             services.AddCors(options =>
             {
                 options.AddPolicy(name: VueCorsPolicy,
